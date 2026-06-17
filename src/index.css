@@ -1,0 +1,207 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens (dark default) ───────────── */
+:root {
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+  --bg:           #090d09;
+  --bg-dark:      #050805;
+  --text:         #e4f0d8;
+  --muted:        #6a8a5a;
+  --soft:         #b8d8a0;
+  --flame:        #3dc914;
+  --ember:        #58e828;
+  --border:       #183018;
+  --card:         rgba(5, 10, 5, 0.90);
+  --outline-text: rgba(61, 201, 20, 0.18);
+  --step-arrow:   #284828;
+  --shadow-btn:   #020602;
+}
+
+/* ── Light theme ─────────────────────────────── */
+[data-theme="light"] {
+  --bg:           #f0f0ec;
+  --bg-dark:      #e4e4e0;
+  --text:         #1a1a14;
+  --muted:        #5a6a50;
+  --soft:         #2a2a20;
+  --border:       #c0c4b8;
+  --card:         rgba(255, 255, 252, 0.96);
+  --outline-text: rgba(26, 26, 20, 0.12);
+  --step-arrow:   #9a9e90;
+  --shadow-btn:   rgba(0, 0, 0, 0.22);
+}
+
+/* ── Global reset ────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-mono);
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left,     rgba(61, 201, 20, 0.10), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(20, 140,  0, 0.12), transparent 32%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-dark) 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+[data-theme="light"] body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(61, 201, 20, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61, 201, 20, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-attachment: fixed;
+}
+
+/* ── Placeholder ─────────────────────────────── */
+::placeholder { color: var(--muted); opacity: 0.55; }
+
+/* ── Bullet list ─────────────────────────────── */
+.roast-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.roast-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+.roast-list li::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  min-width: 6px;
+  background: var(--flame);
+  margin-top: 4px;
+}
+
+/* ── Button press effect ─────────────────────── */
+.btn-roast {
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.btn-roast:not(:disabled):hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--shadow-btn) !important;
+}
+.btn-roast:not(:disabled):active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--shadow-btn) !important;
+}
+
+/* ── Theme toggle ────────────────────────────── */
+.theme-toggle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: color 0.15s, border-color 0.15s;
+}
+.theme-toggle:hover { color: var(--text); }
+
+/* ── Tab toggle ──────────────────────────────── */
+.tab-btn {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.12s, color 0.12s;
+}
+.tab-btn.active {
+  background: var(--flame);
+  color: #fff;
+}
+.tab-btn:not(.active) {
+  background: transparent;
+  color: var(--muted);
+}
+.tab-btn:not(.active):hover { color: var(--text); }
+
+/* ── Step cards responsive ───────────────────── */
+@media (max-width: 680px) {
+  .step-row { flex-direction: column !important; }
+  .step-arrow-wrap { transform: rotate(90deg); }
+  .hero-top { grid-template-columns: 1fr !important; }
+  .cemetery-card { display: none !important; }
+}
+
+/* ── Feature grid responsive ─────────────────── */
+@media (max-width: 720px) {
+  .feature-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Typewriter loading dots ─────────────────── */
+@keyframes ellipsis {
+  0%   { content: '.'; }
+  33%  { content: '..'; }
+  66%  { content: '...'; }
+  100% { content: '.'; }
+}
+.loading-dots::after {
+  content: '.';
+  animation: ellipsis 1.2s step-end infinite;
+}
+
+/* ── Result reveal ───────────────────────────── */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.result-reveal { animation: revealUp 0.4s ease forwards; }
+
+/* ── Scan bars (loading waveform) ───────────── */
+@keyframes scanPulse {
+  0%, 100% { height: 5px;  opacity: 0.35; }
+  50%       { height: 36px; opacity: 1;    }
+}
+
+.scan-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5px;
+  height: 36px;
+}
+
+.scan-bar {
+  width: 3px;
+  background: var(--flame);
+  animation: scanPulse 0.9s ease-in-out infinite;
+  min-height: 5px;
+}
+
+/* ── FAQ accordion ───────────────────────────── */
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.faq-answer.open { max-height: 300px; }
