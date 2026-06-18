@@ -60,7 +60,7 @@ export default function FirstTimeModal() {
         <div style={{ fontFamily:'var(--font-display)', fontSize:'clamp(44px, 10vw, 78px)', lineHeight:0.92, color:'var(--text)', marginBottom:'20px' }}>
           SHUT UP<br />
           <span style={{ background:'linear-gradient(135deg, var(--flame), var(--ember))', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>
-            AND BUILD IT.
+            AND DO IT.
           </span>
         </div>
 
