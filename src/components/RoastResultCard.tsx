@@ -296,7 +296,7 @@ export default function RoastResultCard({ data, raw: _raw, idea, onReset, onRoas
             Stop letting the roast be the end — bring your idea to Founders Fest and turn it into something that ships.
           </p>
           <a
-            href="https://luma.com/t04s4n2s"
+            href="https://hackathon.foundersfest.org"
             target="_blank"
             rel="noopener noreferrer"
             style={{ display: 'inline-block', fontFamily: 'var(--font-display)', fontSize: '20px', letterSpacing: '2px', padding: '12px 28px', background: 'var(--flame)', color: '#fff', textDecoration: 'none', boxShadow: '4px 4px 0 var(--shadow-btn)', transition: 'transform 0.08s ease, box-shadow 0.08s ease' }}
@@ -306,7 +306,7 @@ export default function RoastResultCard({ data, raw: _raw, idea, onReset, onRoas
             REGISTER NOW →
           </a>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--muted)', marginLeft: '14px' }}>
-            foundersfest.org
+            hackathon.foundersfest.org
           </span>
         </div>
       )}
@@ -327,7 +327,7 @@ export default function RoastResultCard({ data, raw: _raw, idea, onReset, onRoas
             And if you want to find out live, bring it to Founders Fest — that's what the hackathon is for.
           </p>
           <a
-            href="https://luma.com/t04s4n2s"
+            href="https://hackathon.foundersfest.org"
             target="_blank"
             rel="noopener noreferrer"
             style={{ display: 'inline-block', fontFamily: 'var(--font-display)', fontSize: '18px', letterSpacing: '2px', padding: '10px 24px', background: 'transparent', color: 'var(--flame)', textDecoration: 'none', border: '1px solid var(--flame)', boxShadow: '3px 3px 0 var(--shadow-btn)' }}
