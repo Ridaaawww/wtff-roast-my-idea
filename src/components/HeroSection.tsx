@@ -1,166 +1,37 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRoast } from '../hooks/useRoast'
 import RoastResultCard, { RawFallback } from './RoastResultCard'
 
 // ── Logo ──────────────────────────────────────────────────────
 function Logo() {
   return (
-    <div style={{ lineHeight: 0.88, marginBottom: '20px' }}>
-      <div
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(72px, 14vw, 140px)',
-          lineHeight: 0.88,
-          background: 'linear-gradient(135deg, #ff9f1a, #ff4d00, #b30000)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          display: 'block',
-        }}
-      >
-        ROAST
-      </div>
-      <div
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(72px, 14vw, 140px)',
-          lineHeight: 0.88,
-          color: 'transparent',
-          WebkitTextStroke: '1px var(--outline-text)',
-          marginLeft: '24px',
-          display: 'block',
-        }}
-      >
-        MY IDEA
-      </div>
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', lineHeight: 1 }}>
+      <span style={{
+        fontFamily: 'var(--font-display)',
+        fontSize: 'clamp(32px, 6vw, 52px)',
+        background: 'linear-gradient(135deg, #ff9f1a, #ff4d00, #b30000)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        lineHeight: 1,
+      }}>ROAST</span>
+      <span style={{
+        fontFamily: 'var(--font-display)',
+        fontSize: 'clamp(32px, 6vw, 52px)',
+        color: 'transparent',
+        WebkitTextStroke: '1.5px var(--outline-text)',
+        lineHeight: 1,
+      }}>MY IDEA</span>
     </div>
   )
 }
 
-// ── Cemetery card (right column) ──────────────────────────────
-function CemeteryCard() {
-  return (
-    <div
-      className="cemetery-card"
-      style={{
-        border: '1px solid var(--border)',
-        background: 'var(--card)',
-        padding: '28px 24px',
-        textAlign: 'center',
-        width: '210px',
-        flexShrink: 0,
-        alignSelf: 'flex-start',
-        marginTop: '8px',
-      }}
-    >
-      <div style={{ fontSize: '56px', lineHeight: 1, marginBottom: '14px' }}>🪦</div>
-      <div
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '11px',
-          color: 'var(--flame)',
-          letterSpacing: '2.5px',
-          marginBottom: '8px',
-        }}
-      >
-        IDEA CEMETERY
-      </div>
-      <div
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '17px',
-          color: 'var(--text)',
-          lineHeight: 1.2,
-          cursor: 'pointer',
-        }}
-      >
-        ENTER THE CEMETERY →
-      </div>
-      <p
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '10px',
-          color: 'var(--muted)',
-          lineHeight: 1.5,
-          margin: '10px 0 0',
-        }}
-      >
-        of ideas that achieved their final peace
-      </p>
-    </div>
-  )
-}
-
-// ── Step card ─────────────────────────────────────────────────
-function StepCard({ num, step, title, body }: { num: string; step: string; title: string; body: string }) {
-  return (
-    <div
-      style={{
-        flex: 1,
-        border: '1px solid var(--border)',
-        background: 'var(--card)',
-        padding: '18px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-        <span
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: '32px',
-            color: 'var(--flame)',
-            lineHeight: 1,
-          }}
-        >
-          {num}
-        </span>
-        <span
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '10px',
-            color: 'var(--muted)',
-            letterSpacing: '1.5px',
-            textTransform: 'uppercase',
-          }}
-        >
-          {step}
-        </span>
-      </div>
-      <h3
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '19px',
-          color: 'var(--text)',
-          margin: 0,
-          lineHeight: 1.1,
-        }}
-      >
-        {title}
-      </h3>
-      <p
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '11px',
-          color: 'var(--muted)',
-          lineHeight: 1.65,
-          margin: 0,
-        }}
-      >
-        {body}
-      </p>
-    </div>
-  )
-}
-
-// ── Loading animation ─────────────────────────────────────────
+// ── Loading ───────────────────────────────────────────────────
 const RESEARCH_PHASES = [
   'Scouring the internet for real data...',
   'Checking what already exists out there...',
   'Pulling competitor intel from the web...',
   'Scanning X and Reddit for market signals...',
-  'Looking up what people actually think...',
   'Finding out who already built this...',
 ]
 
@@ -169,10 +40,7 @@ const ROAST_PHASES = [
   'Scanning for fatal flaws...',
   'Calculating survival probability...',
   'Auditing the competition...',
-  'Identifying your blind spots...',
-  'Reviewing the business model...',
   'Stress-testing your assumptions...',
-  'Estimating time until first pivot...',
   'Preparing the roast...',
   'Writing the brutal truth...',
 ]
@@ -194,55 +62,23 @@ function LoadingDisplay({ researching }: { researching: boolean }) {
   const [phaseIdx, setPhaseIdx] = useState(0)
   const [visible, setVisible] = useState(true)
 
-  useEffect(() => {
-    setPhaseIdx(0)
-    setVisible(true)
-  }, [researching])
+  useEffect(() => { setPhaseIdx(0); setVisible(true) }, [researching])
 
   useEffect(() => {
     const id = setInterval(() => {
       setVisible(false)
-      setTimeout(() => {
-        setPhaseIdx(p => (p + 1) % phases.length)
-        setVisible(true)
-      }, 250)
+      setTimeout(() => { setPhaseIdx(p => (p + 1) % phases.length); setVisible(true) }, 250)
     }, 2200)
     return () => clearInterval(id)
   }, [phases])
 
-  const headline = researching
-    ? 'RESEARCHING YOUR SPACE...'
-    : 'ANALYZING YOUR DELUSION...'
-
   return (
     <div style={{ padding: '64px 0 80px', textAlign: 'center' }}>
-      <div
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: 'clamp(16px, 2.5vw, 22px)',
-          color: 'var(--flame)',
-          letterSpacing: '4px',
-          marginBottom: '32px',
-          transition: 'opacity 0.3s ease',
-        }}
-      >
-        {headline}
+      <div style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(16px, 2.5vw, 22px)', color: 'var(--flame)', letterSpacing: '4px', marginBottom: '32px' }}>
+        {researching ? 'RESEARCHING YOUR SPACE...' : 'ANALYZING YOUR DELUSION...'}
       </div>
-
       <ScanBars />
-
-      <div
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '12px',
-          color: 'var(--muted)',
-          marginTop: '20px',
-          letterSpacing: '0.3px',
-          opacity: visible ? 1 : 0,
-          transition: 'opacity 0.25s ease',
-          minHeight: '18px',
-        }}
-      >
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--muted)', marginTop: '20px', opacity: visible ? 1 : 0, transition: 'opacity 0.25s ease', minHeight: '18px' }}>
         {phases[phaseIdx]}
       </div>
     </div>
@@ -251,386 +87,186 @@ function LoadingDisplay({ researching }: { researching: boolean }) {
 
 // ── Main section ──────────────────────────────────────────────
 export default function HeroSection({ onActiveChange }: { onActiveChange?: (active: boolean) => void }) {
-  const [mode, setMode] = useState<'idea' | 'website'>('idea')
-  const [idea, setIdea] = useState('')
-  const [url, setUrl] = useState('')
+  const [mode, setMode]               = useState<'idea' | 'website'>('idea')
+  const [idea, setIdea]               = useState('')
+  const [url, setUrl]                 = useState('')
   const [submittedIdea, setSubmittedIdea] = useState('')
+  const textareaRef                   = useRef<HTMLTextAreaElement>(null)
   const { loading, researching, data, raw, error, roast, reset } = useRoast()
 
-  const showForm = !loading && data === null && raw === null && error === null
+  const showForm   = !loading && data === null && raw === null && error === null
+  const currentVal = mode === 'idea' ? idea : url
+  const canSubmit  = !loading && currentVal.trim().length > 0
 
-  useEffect(() => {
-    onActiveChange?.(!showForm)
-  }, [showForm, onActiveChange])
-  const currentValue = mode === 'idea' ? idea : url
-  const canSubmit = !loading && currentValue.trim().length > 0
+  useEffect(() => { onActiveChange?.(!showForm) }, [showForm, onActiveChange])
+
+  // Auto-focus textarea when form reappears
+  useEffect(() => { if (showForm && mode === 'idea') textareaRef.current?.focus() }, [showForm, mode])
+
+  // Quality bar (gamification)
+  const charCount   = idea.length
+  const qualityPct  = Math.min(100, (charCount / 180) * 100)
+  const qualityColor =
+    charCount === 0   ? 'var(--border)' :
+    charCount < 60    ? 'var(--muted)'  :
+    charCount < 130   ? 'var(--ember)'  : 'var(--flame)'
+  const qualityLabel =
+    charCount === 0   ? ''                          :
+    charCount < 60    ? 'Give us more to work with' :
+    charCount < 130   ? 'Getting there...'          : '✓ Ready to roast'
 
   const handleSubmit = () => {
     if (!canSubmit) return
-    const val = currentValue.trim()
+    const val = currentVal.trim()
     setSubmittedIdea(val)
     roast(val)
   }
 
-  const handleReset = () => {
-    reset()
-    setIdea('')
-    setUrl('')
-    setSubmittedIdea('')
-  }
-
-  const handleRoastPivot = (pivotText: string) => {
-    setSubmittedIdea(pivotText)
-    roast(pivotText)
-  }
-
-  const switchMode = (next: 'idea' | 'website') => {
-    setMode(next)
-    reset()
-  }
+  const handleReset = () => { reset(); setIdea(''); setUrl(''); setSubmittedIdea('') }
+  const handleRoastPivot = (pivotText: string) => { setSubmittedIdea(pivotText); roast(pivotText) }
+  const switchMode = (next: 'idea' | 'website') => { setMode(next); reset() }
 
   return (
-    <section style={{ maxWidth: '840px', margin: '0 auto' }}>
+    <section style={{ maxWidth: '660px', margin: '0 auto' }}>
 
-      {/* ── Hero top — always visible ── */}
-      <div
-        className={showForm ? 'hero-top' : ''}
-        style={
-          showForm
-            ? { display: 'grid', gridTemplateColumns: '1fr auto', gap: '40px', alignItems: 'flex-start', marginBottom: '28px' }
-            : { marginBottom: '16px' }
-        }
-      >
-        {/* Left column (or full width when form hidden) */}
-        <div>
-          <Logo />
-
-          {showForm && (
-            <h1
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(40px, 7vw, 72px)',
-                lineHeight: 1,
-                color: 'var(--text)',
-                margin: '0 0 12px',
-              }}
-            >
-              Will your idea actually work?
-            </h1>
-          )}
-
-          {/* Tagline */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              marginBottom: '10px',
-            }}
-          >
-            <div
-              style={{
-                width: '32px',
-                height: '1px',
-                background: 'var(--flame)',
-                flexShrink: 0,
-              }}
-            />
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '12px',
-                color: 'var(--muted)',
-                textTransform: 'uppercase',
-                letterSpacing: '1.5px',
-              }}
-            >
-              The AI that tells you what your friends won&apos;t.
-            </span>
-          </div>
-
-          {/* Ideas destroyed counter */}
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '12px',
-              color: 'var(--flame)',
-            }}
-          >
-            <span>🔥</span>
-            <span>12,847 ideas destroyed</span>
-          </div>
-
-          {showForm && (
-            <div style={{ marginTop: '16px' }}>
-              <p
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '12px',
-                  color: 'var(--muted)',
-                  lineHeight: 1.65,
-                  margin: '0 0 6px',
-                }}
-              >
-                Thousands of founders found out the truth before wasting months building something nobody wanted.
-              </p>
-              <p
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '12px',
-                  color: 'var(--flame)',
-                  lineHeight: 1.65,
-                  margin: 0,
-                }}
-              >
-                You can now paste your website too and get a brutal diagnosis of the page.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Right column — cemetery, only in form state */}
-        {showForm && <CemeteryCard />}
+      {/* ── Header row ── */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <Logo />
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--flame)' }}>
+          🔥 12,847 roasted
+        </span>
       </div>
+
+      {/* ── Tagline ── */}
+      {showForm && (
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--muted)', margin: '0 0 22px', letterSpacing: '0.2px' }}>
+          AI feedback that tells you what your friends won&apos;t.
+        </p>
+      )}
 
       {/* ── Loading ── */}
       {loading && <LoadingDisplay researching={researching} />}
 
       {/* ── Error ── */}
       {error && (
-        <div
-          className="result-reveal"
-          style={{
-            marginTop: '32px',
-            border: '1px solid #5a2020',
-            background: 'rgba(80,10,10,0.3)',
-            padding: '20px 24px',
-          }}
-        >
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: '#f87171', margin: '0 0 14px' }}>
-            ✗ {error}
-          </p>
-          <button
-            onClick={handleReset}
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '11px',
-              color: 'var(--muted)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              padding: 0,
-            }}
-          >
+        <div className="result-reveal" style={{ border: '1px solid #5a2020', background: 'rgba(80,10,10,0.3)', padding: '20px 24px', marginBottom: '16px' }}>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: '#f87171', margin: '0 0 12px' }}>✗ {error}</p>
+          <button onClick={handleReset} style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}>
             try again
           </button>
         </div>
       )}
 
       {/* ── Result ── */}
-      {data && (
-        <RoastResultCard
-          data={data}
-          raw={raw}
-          idea={submittedIdea}
-          onReset={handleReset}
-          onRoast={handleRoastPivot}
-        />
-      )}
+      {data && <RoastResultCard data={data} raw={raw} idea={submittedIdea} onReset={handleReset} onRoast={handleRoastPivot} />}
       {!data && raw && <RawFallback text={raw} onReset={handleReset} />}
 
-      {/* ── Form (step cards + input) — only when idle ── */}
+      {/* ── INPUT CARD — the hero ── */}
       {showForm && (
         <>
-          {/* Step cards */}
-          <div
-            className="step-row"
-            style={{ display: 'flex', alignItems: 'stretch', marginBottom: '20px' }}
-          >
-            <StepCard
-              num="01"
-              step="Step 1"
-              title="Tell us what you're building"
-              body="Describe what it does, who it is for, and how it makes money."
-            />
-            <div
-              className="step-arrow-wrap"
-              style={{ display: 'flex', alignItems: 'center', padding: '0 10px', color: 'var(--step-arrow)', fontSize: '18px', flexShrink: 0 }}
-            >
-              →
-            </div>
-            <StepCard
-              num="02"
-              step="Step 2"
-              title="Get the market verdict"
-              body="In seconds you see the real survival odds and whether this thing is born broken."
-            />
-            <div
-              className="step-arrow-wrap"
-              style={{ display: 'flex', alignItems: 'center', padding: '0 10px', color: 'var(--step-arrow)', fontSize: '18px', flexShrink: 0 }}
-            >
-              →
-            </div>
-            <StepCard
-              num="03"
-              step="Step 3"
-              title="Read the roast with no anesthesia"
-              body="You get one brutal line that tells you exactly where it hurts."
-            />
-          </div>
+          <div style={{ border: '2px solid var(--border)', background: 'var(--card)', boxShadow: '6px 6px 0 var(--shadow-btn)' }}>
 
-          {/* Tab toggle */}
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '0' }}>
-            <button
-              className={`tab-btn ${mode === 'idea' ? 'active' : ''}`}
-              onClick={() => switchMode('idea')}
-            >
-              ↓ I have an idea
-            </button>
-            <button
-              className={`tab-btn ${mode === 'website' ? 'active' : ''}`}
-              onClick={() => switchMode('website')}
-            >
-              🌐 I have a website
-            </button>
-          </div>
+            {/* Idea textarea */}
+            {mode === 'idea' && (
+              <>
+                <textarea
+                  ref={textareaRef}
+                  value={idea}
+                  onChange={e => setIdea(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmit() }}
+                  placeholder="What's the idea? What does it do, who's it for, how does it make money?"
+                  rows={6}
+                  style={{
+                    display: 'block', width: '100%', padding: '22px 22px 10px',
+                    background: 'transparent', border: 'none', outline: 'none', resize: 'none',
+                    fontFamily: 'var(--font-mono)', fontSize: '15px', color: 'var(--text)', lineHeight: '1.65',
+                    boxSizing: 'border-box',
+                  }}
+                />
 
-          {/* Input panel */}
-          <div
-            style={{
-              border: '1px solid var(--border)',
-              borderTop: 'none',
-              background: 'var(--card)',
-              padding: '20px',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
-            }}
-          >
-            {/* Label row */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'baseline',
-                marginBottom: '14px',
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '11px',
-                  color: 'var(--muted)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '2px',
-                }}
-              >
-                {mode === 'idea' ? 'Describe your idea ↓' : 'Your website ↓'}
-              </span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--muted)' }}>
-                {mode === 'idea' ? 'More detail = sharper analysis' : 'we audit it like a cold visitor'}
-              </span>
-            </div>
-
-            {/* Input */}
-            {mode === 'idea' ? (
-              <textarea
-                value={idea}
-                onChange={e => setIdea(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmit() }}
-                placeholder="An AI meditation app for anxious millennials..."
-                rows={5}
-                style={{
-                  width: '100%',
-                  background: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                  resize: 'vertical',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '14px',
-                  color: 'var(--soft)',
-                  lineHeight: '1.6',
-                }}
-              />
-            ) : (
-              <input
-                type="url"
-                value={url}
-                onChange={e => setUrl(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter') handleSubmit() }}
-                placeholder="https://your-startup.com"
-                style={{
-                  width: '100%',
-                  background: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '14px',
-                  color: 'var(--soft)',
-                  lineHeight: '1.6',
-                  padding: '8px 0 16px',
-                }}
-              />
+                {/* Quality bar */}
+                <div style={{ padding: '0 22px 16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ flex: 1, height: '3px', background: 'var(--border)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${qualityPct}%`, background: qualityColor, transition: 'width 0.35s ease, background 0.35s ease', borderRadius: '2px' }} />
+                  </div>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: qualityColor, transition: 'color 0.35s ease', minWidth: '170px', textAlign: 'right' }}>
+                    {qualityLabel}
+                  </span>
+                </div>
+              </>
             )}
 
-            {/* Hint row */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'baseline',
-                paddingTop: '10px',
-                borderTop: '1px solid var(--border)',
-                gap: '16px',
-              }}
-            >
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--muted)', lineHeight: 1.5 }}>
-                {mode === 'idea'
-                  ? "Include what it does, who it's for, and how it makes money."
-                  : 'We analyze your site the way a new visitor sees it.'}
-              </span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--flame)', flexShrink: 0 }}>
-                Full website roast free · AI Prompt $9
-              </span>
+            {/* Website URL input */}
+            {mode === 'website' && (
+              <div style={{ padding: '22px 22px 20px' }}>
+                <input
+                  autoFocus
+                  type="url"
+                  value={url}
+                  onChange={e => setUrl(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') handleSubmit() }}
+                  placeholder="https://your-startup.com"
+                  style={{
+                    display: 'block', width: '100%',
+                    background: 'transparent', border: 'none', outline: 'none',
+                    fontFamily: 'var(--font-mono)', fontSize: '15px', color: 'var(--text)', lineHeight: '1.65',
+                    boxSizing: 'border-box',
+                  }}
+                />
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--muted)', margin: '12px 0 0' }}>
+                  We read it the way a new visitor would.
+                </p>
+              </div>
+            )}
+
+            {/* Bottom bar: tabs + submit */}
+            <div style={{ display: 'flex', borderTop: '1px solid var(--border)', alignItems: 'stretch', minHeight: '48px' }}>
+              <button
+                className={`tab-btn ${mode === 'idea' ? 'active' : ''}`}
+                onClick={() => switchMode('idea')}
+                style={{ border: 'none', borderRight: '1px solid var(--border)', borderRadius: 0, flexShrink: 0 }}
+              >
+                💡 Idea
+              </button>
+              <button
+                className={`tab-btn ${mode === 'website' ? 'active' : ''}`}
+                onClick={() => switchMode('website')}
+                style={{ border: 'none', borderRight: '1px solid var(--border)', borderRadius: 0, flexShrink: 0 }}
+              >
+                🌐 Website
+              </button>
+              <div style={{ flex: 1 }} />
+              <button
+                onClick={handleSubmit}
+                disabled={!canSubmit}
+                className="btn-roast"
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '20px',
+                  letterSpacing: '2px',
+                  padding: '0 28px',
+                  background: canSubmit ? 'var(--flame)' : 'transparent',
+                  color: canSubmit ? '#fff' : 'var(--muted)',
+                  border: 'none',
+                  borderLeft: '1px solid var(--border)',
+                  cursor: canSubmit ? 'pointer' : 'default',
+                  transition: 'background 0.12s, color 0.12s',
+                  flexShrink: 0,
+                }}
+              >
+                ROAST IT →
+              </button>
             </div>
           </div>
 
-          {/* ROAST IT button */}
-          <button
-            onClick={handleSubmit}
-            disabled={!canSubmit}
-            className="btn-roast"
-            style={{
-              width: '100%',
-              fontFamily: 'var(--font-display)',
-              fontSize: '28px',
-              letterSpacing: '2px',
-              background: canSubmit ? 'var(--flame)' : 'var(--card)',
-              color: canSubmit ? '#fff' : 'var(--muted)',
-              border: '1px solid var(--border)',
-              borderTop: 'none',
-              cursor: canSubmit ? 'pointer' : 'default',
-              padding: '18px 26px',
-              display: 'block',
-              boxShadow: canSubmit ? '4px 4px 0 var(--shadow-btn)' : 'none',
-              transition: 'background 0.12s, color 0.12s, box-shadow 0.08s, transform 0.08s',
-            }}
-          >
-            ROAST IT
-          </button>
-
-          <p
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '11px',
-              color: 'var(--muted)',
-              margin: '10px 0 0',
-            }}
-          >
-            Full website roast free · AI Prompt $9
-          </p>
+          {/* Step indicators */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '14px', justifyContent: 'center' }}>
+            {(['① Describe', '→', '② Verdict', '→', '③ Roast'] as const).map((item, i) => (
+              <span key={i} style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: item === '→' ? 'var(--step-arrow)' : 'var(--muted)' }}>
+                {item}
+              </span>
+            ))}
+          </div>
         </>
       )}
 
