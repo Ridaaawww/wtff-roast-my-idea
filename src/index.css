@@ -198,6 +198,26 @@ body {
   min-height: 5px;
 }
 
+/* ── Input card glow ─────────────────────────── */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 6px 6px 0 var(--shadow-btn), 0 0 0 1px rgba(61,201,20,0.18), 0 0 18px rgba(61,201,20,0.07); }
+  50%       { box-shadow: 6px 6px 0 var(--shadow-btn), 0 0 0 2px rgba(61,201,20,0.32), 0 0 32px rgba(61,201,20,0.13); }
+}
+.input-card {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+.input-card:focus-within {
+  animation: none;
+  box-shadow: 6px 6px 0 var(--shadow-btn), 0 0 0 2px rgba(61,201,20,0.55), 0 0 40px rgba(61,201,20,0.2) !important;
+}
+[data-theme="light"] .input-card {
+  animation: none;
+  box-shadow: 6px 6px 0 var(--shadow-btn), 0 0 0 1.5px rgba(61,201,20,0.3), 0 0 22px rgba(61,201,20,0.12);
+}
+[data-theme="light"] .input-card:focus-within {
+  box-shadow: 6px 6px 0 var(--shadow-btn), 0 0 0 2px rgba(61,201,20,0.6), 0 0 32px rgba(61,201,20,0.18) !important;
+}
+
 /* ── FAQ accordion ───────────────────────────── */
 .faq-answer {
   max-height: 0;
