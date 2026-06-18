@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import HeroSection from './components/HeroSection'
-import WhySection  from './components/WhySection'
-import FaqSection  from './components/FaqSection'
-import SiteFooter  from './components/SiteFooter'
+import HeroSection    from './components/HeroSection'
+import WhySection     from './components/WhySection'
+import FaqSection     from './components/FaqSection'
+import SiteFooter     from './components/SiteFooter'
+import FirstTimeModal from './components/FirstTimeModal'
 
 export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark')
@@ -24,6 +25,7 @@ export default function App() {
         </button>
       </div>
 
+      <FirstTimeModal />
       <div style={{ maxWidth: '1180px', margin: '0 auto', padding: '56px 24px 40px' }}>
         <HeroSection onActiveChange={setIsRoasting} />
         {!isRoasting && <WhySection />}
