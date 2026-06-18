@@ -244,28 +244,27 @@ export default function HeroSection({ onActiveChange }: { onActiveChange?: (acti
           </div>
 
           {/* ROAST IT — standalone CTA */}
-          <button
-            onClick={handleSubmit}
-            disabled={!canSubmit}
-            className="btn-roast"
-            style={{
-              width: '100%',
-              marginTop: '12px',
-              fontFamily: 'var(--font-display)',
-              fontSize: '26px',
-              letterSpacing: '3px',
-              padding: '18px',
-              background: canSubmit ? 'var(--flame)' : 'var(--card)',
-              color: canSubmit ? '#fff' : 'var(--muted)',
-              border: `2px solid ${canSubmit ? 'var(--flame)' : 'var(--border)'}`,
-              cursor: canSubmit ? 'pointer' : 'default',
-              boxShadow: canSubmit ? '5px 5px 0 var(--shadow-btn)' : 'none',
-              transition: 'background 0.15s, color 0.15s, box-shadow 0.08s, border-color 0.15s, transform 0.08s',
-              display: 'block',
-            }}
-          >
-            {canSubmit ? '🔥 ROAST IT' : 'ROAST IT'}
-          </button>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+            <button
+              onClick={handleSubmit}
+              disabled={!canSubmit}
+              className={`btn-roast${canSubmit ? ' btn-roast-glow' : ''}`}
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: '20px',
+                letterSpacing: '3px',
+                padding: '13px 36px',
+                background: canSubmit ? 'var(--flame)' : 'var(--card)',
+                color: canSubmit ? '#fff' : 'var(--muted)',
+                border: `2px solid ${canSubmit ? 'var(--flame)' : 'var(--border)'}`,
+                borderRadius: '12px',
+                cursor: canSubmit ? 'pointer' : 'default',
+                transition: 'background 0.15s, color 0.15s, border-color 0.15s, transform 0.08s',
+              }}
+            >
+              {canSubmit ? '🔥 ROAST IT' : 'ROAST IT'}
+            </button>
+          </div>
 
           {/* Step indicators */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '14px', justifyContent: 'center' }}>

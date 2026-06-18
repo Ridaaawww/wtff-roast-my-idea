@@ -198,6 +198,15 @@ body {
   min-height: 5px;
 }
 
+/* ── Roast button glow ───────────────────────── */
+@keyframes roastGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(61,201,20,0.45), 0 0 22px rgba(61,201,20,0.2); }
+  50%       { box-shadow: 0 0 18px rgba(61,201,20,0.75), 0 0 44px rgba(61,201,20,0.35); }
+}
+.btn-roast-glow {
+  animation: roastGlow 2s ease-in-out infinite;
+}
+
 /* ── Input card glow ─────────────────────────── */
 @keyframes glowPulse {
   0%, 100% { box-shadow: 6px 6px 0 var(--shadow-btn), 0 0 0 1px rgba(61,201,20,0.18), 0 0 18px rgba(61,201,20,0.07); }
