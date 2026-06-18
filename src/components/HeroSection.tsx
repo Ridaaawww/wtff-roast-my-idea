@@ -248,7 +248,7 @@ export default function HeroSection({ onActiveChange }: { onActiveChange?: (acti
             <button
               onClick={handleSubmit}
               disabled={!canSubmit}
-              className={`btn-roast${canSubmit ? ' btn-roast-glow' : ''}`}
+              className="btn-roast btn-roast-glow"
               style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: '20px',
