@@ -18,7 +18,7 @@ export function useTypewriter(
     let index = 0
 
     const timeoutId = setTimeout(() => {
-      intervalId = setInterval(() => {
+      intervalId = window.setInterval(() => {
         index++
         setDisplayed(text.slice(0, index))
         if (index >= text.length) {
