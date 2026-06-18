@@ -26,6 +26,84 @@ function Logo() {
   )
 }
 
+// ── Live activity toasts ──────────────────────────────────────
+const RECENT_ROASTS = [
+  { idea: '"LinkedIn but actually fun"',        score: 5,  emoji: '☠️' },
+  { idea: '"AI therapist for Gen Z"',           score: 22, emoji: '🧠' },
+  { idea: '"Uber for dog walkers"',             score: 14, emoji: '🐕' },
+  { idea: '"Notion but simpler"',               score: 9,  emoji: '💀' },
+  { idea: '"Airbnb for empty offices"',         score: 38, emoji: '🏢' },
+  { idea: '"Dating app for founders"',          score: 18, emoji: '💔' },
+  { idea: '"Blockchain for supply chain"',      score: 3,  emoji: '⚰️' },
+  { idea: '"AI that replaces your lawyer"',     score: 31, emoji: '⚖️' },
+  { idea: '"TikTok but educational"',           score: 27, emoji: '📚' },
+  { idea: '"Spotify but for podcasts"',         score: 11, emoji: '🎙️' },
+  { idea: '"An app that reminds you to drink water"', score: 6, emoji: '💧' },
+  { idea: '"ChatGPT wrapper for HR"',           score: 8,  emoji: '🤖' },
+]
+
+function scoreColor(s: number) {
+  return s <= 20 ? '#cc3333' : s <= 40 ? '#cc7730' : '#44aa66'
+}
+
+function LiveToast() {
+  const [idx, setIdx]         = useState(0)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const show = () => {
+      setIdx(i => (i + 1) % RECENT_ROASTS.length)
+      setVisible(true)
+      setTimeout(() => setVisible(false), 3200)
+    }
+    const initial  = setTimeout(show, 1800)
+    const interval = setInterval(show, 6000)
+    return () => { clearTimeout(initial); clearInterval(interval) }
+  }, [])
+
+  const r = RECENT_ROASTS[idx]
+  return (
+    <div style={{
+      position: 'fixed', bottom: '28px', left: '28px', zIndex: 100,
+      transform: visible ? 'translateY(0)' : 'translateY(16px)',
+      opacity: visible ? 1 : 0,
+      transition: 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease',
+      pointerEvents: 'none',
+    }}>
+      <div style={{
+        border: '1px solid var(--border)', background: 'var(--card)',
+        padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '10px',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.18)', maxWidth: '260px',
+        backdropFilter: 'blur(8px)',
+      }}>
+        <span style={{ fontSize: '20px', flexShrink: 0 }}>{r.emoji}</span>
+        <div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--muted)', marginBottom: '2px', letterSpacing: '0.5px' }}>
+            just roasted
+          </div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.35, marginBottom: '3px' }}>
+            {r.idea}
+          </div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: scoreColor(r.score), fontWeight: 600 }}>
+            {r.score}% survival
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Rotating placeholder ideas ─────────────────────────────────
+const PLACEHOLDER_IDEAS = [
+  "What's the idea? What it does, who it's for, how it makes money.",
+  'e.g. "An AI coach that helps first-time managers not destroy their teams..."',
+  'e.g. "Airbnb for unused commercial kitchens — chefs rent by the hour..."',
+  'e.g. "A browser extension that blocks you from buying stuff you\'ll regret..."',
+  'e.g. "B2B SaaS that auto-chases overdue invoices for freelancers..."',
+  'e.g. "On-demand personal stylist via WhatsApp, no app download needed..."',
+  'e.g. "LinkedIn but you only see people actually open to new things..."',
+]
+
 // ── Loading ───────────────────────────────────────────────────
 const RESEARCH_PHASES = [
   'Scouring the internet for real data...',
@@ -91,8 +169,16 @@ export default function HeroSection({ onActiveChange }: { onActiveChange?: (acti
   const [idea, setIdea]               = useState('')
   const [url, setUrl]                 = useState('')
   const [submittedIdea, setSubmittedIdea] = useState('')
+  const [placeholderIdx, setPlaceholderIdx] = useState(0)
   const textareaRef                   = useRef<HTMLTextAreaElement>(null)
   const { loading, researching, data, raw, error, roast, reset } = useRoast()
+
+  // Cycle placeholder when textarea is empty
+  useEffect(() => {
+    if (idea.length > 0) return
+    const id = setInterval(() => setPlaceholderIdx(i => (i + 1) % PLACEHOLDER_IDEAS.length), 4000)
+    return () => clearInterval(id)
+  }, [idea])
 
   const showForm   = !loading && data === null && raw === null && error === null
   const currentVal = mode === 'idea' ? idea : url
@@ -127,6 +213,7 @@ export default function HeroSection({ onActiveChange }: { onActiveChange?: (acti
   const switchMode = (next: 'idea' | 'website') => { setMode(next); reset() }
 
   return (
+    <>
     <section style={{ maxWidth: '660px', margin: '0 auto' }}>
 
       {/* ── Header row ── */}
@@ -174,7 +261,7 @@ export default function HeroSection({ onActiveChange }: { onActiveChange?: (acti
                   value={idea}
                   onChange={e => setIdea(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmit() }}
-                  placeholder="What's the idea? What does it do, who's it for, how does it make money?"
+                  placeholder={PLACEHOLDER_IDEAS[placeholderIdx]}
                   rows={6}
                   style={{
                     display: 'block', width: '100%', padding: '22px 22px 10px',
@@ -278,5 +365,9 @@ export default function HeroSection({ onActiveChange }: { onActiveChange?: (acti
       )}
 
     </section>
+
+    {/* Live activity toasts */}
+    {showForm && <LiveToast />}
+    </>
   )
 }
